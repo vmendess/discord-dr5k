@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acesso ao Discord - Editor DR 5K</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            max-width: 400px;
+            width: 90%;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        p {
+            color: #666;
+            margin-bottom: 30px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: bold;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        button:hover {
+            background: #5568d3;
+        }
+        .success {
+            display: none;
+            text-align: center;
+            color: #28a745;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="form-container">
+            <h1>🎉 Parabéns pela compra!</h1>
+            <p>Para receber acesso ao Discord, informe seu usuário:</p>
+            <form id="discord-form">
+                <label for="discord_username">Seu usuário do Discord:</label>
+                <input type="text" id="discord_username" name="discord_username" placeholder="Ex: eduardoo" required>
+                <button type="submit">Receber Acesso</button>
+            </form>
+        </div>
+        <div class="success" id="success-message">
+            <h2>✅ Pronto!</h2>
+            <p>Você receberá a role "Editor DR 5K" no Discord em instantes!</p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('discord-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('discord_username').value;
+            
+            try {
+                await fetch('https://eoee4mj8gub22uj.m.pipedream.net', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ discord_username: username })
+                });
+                
+                document.getElementById('form-container').style.display = 'none';
+                document.getElementById('success-message').style.display = 'block';
+            } catch (error) {
+                alert('Erro ao processar. Tente novamente.');
+            }
+        });
+    </script>
+</body>
+</html>
