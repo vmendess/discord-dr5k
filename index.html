@@ -63,10 +63,20 @@
         button:hover {
             background: #5568d3;
         }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
         .success {
             display: none;
             text-align: center;
             color: #28a745;
+        }
+        .error {
+            display: none;
+            text-align: center;
+            color: #dc3545;
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -77,9 +87,12 @@
             <p>Para receber acesso ao Discord, informe seu usuário:</p>
             <form id="discord-form">
                 <label for="discord_username">Seu usuário do Discord:</label>
-                <input type="text" id="discord_username" name="discord_username" placeholder="Ex: eduardoo" required>
-                <button type="submit">Receber Acesso</button>
+                <input type="text" id="discord_username" name="discord_username" placeholder="Ex: vinii1234" required>
+                <button type="submit" id="submit-btn">Receber Acesso</button>
             </form>
+            <div class="error" id="error-message">
+                Erro ao processar. Tente novamente.
+            </div>
         </div>
         <div class="success" id="success-message">
             <h2>✅ Pronto!</h2>
@@ -90,19 +103,38 @@
     <script>
         document.getElementById('discord-form').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const username = document.getElementById('discord_username').value;
+            
+            const username = document.getElementById('discord_username').value.trim();
+            const submitBtn = document.getElementById('submit-btn');
+            const errorMsg = document.getElementById('error-message');
+            
+            // Desabilita o botão durante o envio
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Enviando...';
+            errorMsg.style.display = 'none';
             
             try {
-                await fetch('https://eoee4mj8gub22uj.m.pipedream.net', {
+                const response = await fetch('https://eoee4mj8gub22uj.m.pipedream.net', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ discord_username: username })
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        discord_username: username
+                    })
                 });
                 
+                console.log('Response status:', response.status);
+                
+                // Mostra sucesso independente da resposta (webhook sempre retorna 200)
                 document.getElementById('form-container').style.display = 'none';
                 document.getElementById('success-message').style.display = 'block';
+                
             } catch (error) {
-                alert('Erro ao processar. Tente novamente.');
+                console.error('Erro:', error);
+                errorMsg.style.display = 'block';
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Receber Acesso';
             }
         });
     </script>
