@@ -108,6 +108,13 @@
             const submitBtn = document.getElementById('submit-btn');
             const errorMsg = document.getElementById('error-message');
             
+            // Validação básica
+            if (!username) {
+                errorMsg.textContent = 'Por favor, informe seu usuário do Discord';
+                errorMsg.style.display = 'block';
+                return;
+            }
+            
             // Desabilita o botão durante o envio
             submitBtn.disabled = true;
             submitBtn.textContent = 'Enviando...';
@@ -125,13 +132,19 @@
                 });
                 
                 console.log('Response status:', response.status);
+                console.log('Dados enviados:', { discord_username: username });
                 
-                // Mostra sucesso independente da resposta (webhook sempre retorna 200)
-                document.getElementById('form-container').style.display = 'none';
-                document.getElementById('success-message').style.display = 'block';
+                if (response.ok) {
+                    // Mostra sucesso
+                    document.getElementById('form-container').style.display = 'none';
+                    document.getElementById('success-message').style.display = 'block';
+                } else {
+                    throw new Error('Erro na resposta do servidor');
+                }
                 
             } catch (error) {
                 console.error('Erro:', error);
+                errorMsg.textContent = 'Erro ao processar. Tente novamente.';
                 errorMsg.style.display = 'block';
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'Receber Acesso';
